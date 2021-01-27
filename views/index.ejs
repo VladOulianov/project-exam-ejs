@@ -1,0 +1,110 @@
+<%- include('./partials/head')-%>
+
+<!-- Page Content -->
+<div class="container">
+  <% if (message) { %>
+    <div style="text-align: center" class="alert alert-<%= message.type %> ">
+      <p><%= message.message %></p>
+    </div>
+    <% } %>
+  <div class="breadcrumb-main">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a href="/">Home</a>
+      </li>
+      <li class="breadcrumb-item active">Liste des Légumes</li>
+    </ol>
+  </div>
+
+
+  <div>
+    <form action="/" method="POST">
+      <input type="hidden" name="_csrf" value="<%=csrfToken%>">
+      <div class="input-group mb-4">
+        <label class="form-label"> Nom du legume </label> 
+        <input type="text" class="form-control" name="legumename">
+        <div class="input-group-append">
+          <button class="btn btn-outline-secondary" type="submit">Ajouter le légume</button>
+        </div>
+      </div>
+      <div class="form-check d-inline-flex">
+        <input class="form-check-input" type="checkbox" value="1" id="flexCheckDefault" name="saisonname">
+        <label class="form-check-label" for="flexCheckDefault">
+          printemps
+        </label>
+      </div>
+      <div class="form-check d-inline-flex">
+        <input class="form-check-input" type="checkbox" value="2" id="flexCheckDefault" name="saisonname">
+        <label class="form-check-label" for="flexCheck">
+          été
+        </label>
+      </div>
+      <div class="form-check d-inline-flex">
+        <input class="form-check-input" type="checkbox" value="3" id="flexCheckDefault" name="saisonname">
+        <label class="form-check-label" for="flexCheck">
+          automn
+        </label>
+      </div>
+      <div class="form-check d-inline-flex">
+        <input class="form-check-input" type="checkbox" value="4" id="flexCheckDefault" name="saisonname">
+        <label class="form-check-label" for="flexCheck">
+          hiver
+        </label>
+      </div>
+
+    </form>
+  </div>
+
+  <input class="form-control mb-4" id="tableSearch" type="text" onkeyup="searchUser()"
+    placeholder="Rechercher un légume">
+
+  <table class="table">
+    <thead class="thead-light">
+      <tr>
+        <th scope="col">Légumes</th>
+        <th scope="col">Saison</th>
+        <th scope="col">Supprimer</th>
+      </tr>
+    </thead>
+    <tbody id="user">
+      <% legumeList.forEach(function(legume) { %>
+      <tr>
+        <td><%= legume.legumename %></td>
+        <td><%= legume.saison %></td>
+        <td>
+          <form action="/legume<%= legume.legumeId %>?_method=DELETE" method="POST">
+            <input type="hidden" name="_csrf" value="<%=csrfToken%>">
+            <button type="submit" class="btn btn-danger">X</button>
+          </form>
+        </td>
+      </tr>
+      <% }); %>
+    </tbody>
+  </table>
+
+
+</div>
+
+
+
+
+  <script>
+    function searchUser() {
+      // Variables
+      const input = document.getElementById('tableSearch');
+      const filter = input.value.toUpperCase();
+      const tbody = document.getElementById('user');
+      const tr = tbody.getElementsByTagName(
+      'tr'); // Filtrer les noms et effacer tous ceux qui ne matchent pas avec la recherche
+      for (i = 0; i < tr.length; i++) {
+        const a = tr[i].getElementsByTagName("td")[0];
+        const txtValue = a.textContent || a.innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+          tr[i].style.display = "";
+        } else {
+          tr[i].style.display = "none";
+        }
+      }
+    }
+  </script>
+  <%- include('./partials/footer')-%>

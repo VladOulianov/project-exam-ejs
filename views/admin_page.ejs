@@ -1,0 +1,81 @@
+<%- include('./partials/head')-%>
+
+<!-- Page Content -->
+<div class="container">
+  <div class="breadcrumb-main">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a href="/">Home</a>
+      </li>
+      <li class="breadcrumb-item active">Liste des employés</li>
+    </ol>
+  </div>
+
+  <!-- <form action="/admin/legumes/add" method="POST" encType="multipart/form-data">
+
+    <div class="input-group mb-4">
+      <label>Nom du legumes</label>
+      <input type="text" class="form-control" name="legume">
+      <div class="input-group-append">
+        <button class="btn btn-outline-secondary" type="submit">Ajouter le légume</button>
+      </div>
+    </div>
+  </form> -->
+  
+  <input class="form-control mb-4" id="tableSearch" type="text" onkeyup="searchUser()"
+                placeholder="Rechercher un utilisateur">
+
+  <table class="table">
+    <thead class="thead-light">
+      <tr>
+        <th scope="col">Nom</th>
+        <th scope="col">Prémon</th>
+        <th scope="col">Mail</th>
+        <th scope="col">Téléphone</th>
+        <th scope="col">Supprimer</th>
+      </tr>
+    </thead>
+    <tbody id="user">
+      <% userList.forEach(function(user) { %>
+        <tr>
+          <td><%= user.lastname %></td>
+          <td><%= user.firstname %></td>
+          <td><%= user.email %></td>
+          <td><%= user.phonenumber %></td>
+          <td>
+            <form action="/admin/user<%= user.userId %>?_method=DELETE" method="POST">
+              <input type="hidden" name="_csrf" value="<%=csrfToken%>">
+              <button type="submit" class="btn btn-danger">X</button>
+            </form>
+          </td>
+        </tr>
+          <% }); %>
+    </tbody>
+  </table>
+</div>
+
+
+
+
+ 
+
+  
+<script>
+    function searchUser() {
+        // Variables
+        const input = document.getElementById('tableSearch');
+        const filter = input.value.toUpperCase();
+        const tbody = document.getElementById('user');
+        const tr = tbody.getElementsByTagName('tr');        // Filtrer les noms et effacer tous ceux qui ne matchent pas avec la recherche
+        for (i = 0; i < tr.length; i++) {
+            const a = tr[i].getElementsByTagName("td")[1];
+            const txtValue = a.textContent || a.innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                tr[i].style.display = "";
+            } else {
+                tr[i].style.display = "none";
+            }
+        }
+    }
+</script>
+  <%- include('./partials/footer')-%>
